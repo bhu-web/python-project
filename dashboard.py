@@ -81,11 +81,23 @@ category_df = filtered_df.groupby("Category", as_index=False)["Sales"].sum()
 fig = px.bar(category_df, x="Category", y="Sales", text=category_df["Sales"].map("${:,.2f}".format))
 st.subheader("Category-wise Sales")
 st.plotly_chart(fig, use_container_width=True)
+with st.expander("Category_ViewData"):
+    st.write(category_df.style.background_gradient(cmap="Blues"))
+    csv = category_df.to_csv(index = False).encode('utf-8')
+    st.download_button("Download Data", data = csv, file_name = "Category.csv", mime = "text/csv",
+                        help = 'Click here to download the data as a CSV file')
+
 
 # Region-wise Sales visualization (pie chart)
 fig = px.pie(filtered_df, values="Sales", names="Region", hole=0.5)
 st.subheader("Region-wise Sales")
 st.plotly_chart(fig, use_container_width=True)
+with st.expander("Region_ViewData"):
+    region = filtered_df.groupby(by = "Region", as_index = False)["Sales"].sum()
+    st.write(region.style.background_gradient(cmap="Oranges"))
+    csv = region.to_csv(index = False).encode('utf-8')
+    st.download_button("Download Data", data = csv, file_name = "Region.csv", mime = "text/csv",
+                    help = 'Click here to download the data as a CSV file')
 
 # Time series analysis for sales over time
 filtered_df["month_year"] = filtered_df["Order Date"].dt.to_period("M")     # Extract month and year
